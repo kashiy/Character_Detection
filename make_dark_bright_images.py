@@ -10,22 +10,22 @@ import os
 # path = 'WhatsApp Image 2020-12-03 at 17.13.33.jpeg'
 
 # store new images in your dir you want
-write_to_directory = r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg_bright_dark"
+write_to_directory = r"C:\Users\Yuval Kashi\Downloads\morty_sits_bright_dark_WITH_LABEL"
 if not os.path.exists(write_to_directory):
     os.makedirs(write_to_directory)
 
 # your path folder to your images
-source_dir = r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg"
-for img in glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg"):
+source_dir = r"C:\Users\Yuval Kashi\Downloads\morty_sits_WITH_LABEL"
+for img in glob.glob(source_dir+"\*.jpeg"):
 # for img in glob.glob(r"C:\Users\Yuval Kashi\Downloads\morty_standing\*.PNG"):
     print(img)
     fileName_absolute = os.path.basename(img)  ## Now get the file name with os.path.basename
     # print("Only file name: ", fileName_absolute)
 
     #.PNG
-    no_jpeg = fileName_absolute[:-4]
+    # no_jpeg = fileName_absolute[:-4]
     #.jpeg
-    # no_jpeg = fileName_absolute[:-5]
+    no_jpeg = fileName_absolute[:-5]
 
     new_filename_dark = no_jpeg+" dark.jpeg"
     new_filename_bright = no_jpeg + " bright.jpeg"

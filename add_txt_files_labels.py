@@ -4,12 +4,12 @@ import os
 import shutil
 
 # store new images in your dir you want
-write_to_directory = r"C:\Users\Yuval Kashi\Downloads\morty_standing_bright_dark_jpeg_NO_LABEL"
+write_to_directory = r"C:\Users\Yuval Kashi\Downloads\morty_sits_bright_dark_WITH_LABEL"
 if not os.path.exists(write_to_directory):
     os.makedirs(write_to_directory)
 
 # your path to images folder source
-source_dir = r"C:\Users\Yuval Kashi\Downloads\morty_standing_WITH_LABEL_JPEG"
+source_dir = r"C:\Users\Yuval Kashi\Downloads\morty_sits_WITH_LABEL"
 for img in glob.glob(source_dir+"\*.txt"):
     print(img)
     fileName_absolute = os.path.basename(img)  ## Now get the file name with os.path.basename
