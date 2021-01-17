@@ -3,14 +3,14 @@ import numpy as np
 
 # net = cv2.dnn.readNet('rick_stand_7_hours_yolov3_training_last.weights', 'yolov3_testing.cfg')
 
-net = cv2.dnn.readNet('yolov3_training_last.weights', 'yolov3_testing.cfg')
+net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\yolov3_training_last.weights", 'yolov3_testing.cfg')
 
-classes = ["rick_standing","rick_sits"]
+classes = ["rickg","morty"]
 # classes = []
 # with open("classes.txt", "r") as f:
 #     classes = f.read().splitlines()
 
-cap = cv2.VideoCapture('rick_video.mp4')
+cap = cv2.VideoCapture(r"C:\Users\Yuval Kashi\Downloads\rick_video.mp4")
 font = cv2.FONT_HERSHEY_PLAIN
 colors = np.random.uniform(0, 255, size=(100, 3))
 
