@@ -4,24 +4,19 @@ import glob
 import random
 
 
-
-
-
 # Load Yolo
-# net = cv2.dnn.readNet("yolov3_training_last.weights", "yolov3_testing.cfg")
-net = cv2.dnn.readNet('rick_stand_7_hours_yolov3_training_last.weights', 'yolov3_testing.cfg')
-
+net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
 
 # Name custom object
-classes = ["rick_standing","rick_sits"]
+classes = ["Morty"]
 
 # Images path
-# images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
-images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\test\*.jpg")
+images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
 
+#work
+a=1
 
 layer_names = net.getLayerNames()
-#here the different lines
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
@@ -31,8 +26,7 @@ random.shuffle(images_path)
 for img_path in images_path:
     # Loading image
     img = cv2.imread(img_path)
-    # img = cv2.resize(img, None, fx=0.4, fy=0.4)
-    img = cv2.resize(img, None, fx=1, fy=1)
+    img = cv2.resize(img, None, fx=0.4, fy=0.4)
     height, width, channels = img.shape
 
     # Detecting objects
@@ -75,9 +69,8 @@ for img_path in images_path:
             label = str(classes[class_ids[i]])
             color = colors[class_ids[i]]
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            # cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
-            # cv2.putText(img, label, (x, y + 20), font, 2, color, 2)
-            cv2.putText(img, label, (x, y + 10), font, 1, color, 2)
+            cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
+
 
     cv2.imshow("Image", img)
     key = cv2.waitKey(0)
