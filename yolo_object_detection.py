@@ -5,20 +5,26 @@ import random
 
 
 # Load Yolo
-net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
+# net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
+net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_yolov3_training_final.weights", "yolov3_testing.cfg")
+net_morty = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
 
 # Name custom object
-classes = ["Morty"]
+classes = ["Rick"]
+classes_morty = ["Morty"]
 
 # Images path
 images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
 
-#work
-a=1
+
 
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
+
+layer_names_morty = net_morty.getLayerNames()
+output_layers_morty = [layer_names[i[0] - 1] for i in net_morty.getUnconnectedOutLayers()]
+colors_morty = np.random.uniform(0, 255, size=(len(classes_morty), 3))
 
 # Insert here the path of your images
 random.shuffle(images_path)
@@ -34,6 +40,9 @@ for img_path in images_path:
 
     net.setInput(blob)
     outs = net.forward(output_layers)
+
+    net_morty.setInput(blob)
+    outs_morty = net_morty.forward(output_layers_morty)
 
     # Showing informations on the screen
     class_ids = []
@@ -60,6 +69,8 @@ for img_path in images_path:
                 confidences.append(float(confidence))
                 class_ids.append(class_id)
 
+
+
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     print(indexes)
     font = cv2.FONT_HERSHEY_PLAIN
@@ -69,7 +80,48 @@ for img_path in images_path:
             label = str(classes[class_ids[i]])
             color = colors[class_ids[i]]
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(img, label, (x, y + 30), font, 3, color, 2)
+            cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
+
+
+    #morty
+    # Showing informations on the screen
+    class_ids_morty = []
+    confidences_morty = []
+    boxes_morty = []
+    for out_morty in outs_morty:
+        for detection in out_morty:
+            scores = detection[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
+            if confidence > 0.3:
+                # Object detected
+                print(class_id)
+                center_x = int(detection[0] * width)
+                center_y = int(detection[1] * height)
+                w = int(detection[2] * width)
+                h = int(detection[3] * height)
+
+                # Rectangle coordinates
+                x = int(center_x - w / 2)
+                y = int(center_y - h / 2)
+
+                boxes_morty.append([x, y, w, h])
+                confidences_morty.append(float(confidence))
+                class_ids_morty.append(class_id)
+
+
+
+    indexes_morty = cv2.dnn.NMSBoxes(boxes_morty, confidences_morty, 0.5, 0.4)
+    print(indexes_morty)
+    font_morty = cv2.FONT_HERSHEY_PLAIN
+    for i in range(len(boxes_morty)):
+        if i in indexes_morty:
+            x, y, w, h = boxes_morty[i]
+            label = str(classes_morty[class_ids_morty[i]])
+            color = colors_morty[class_ids_morty[i]]
+            cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+            cv2.putText(img, label, (x, y + 30), font_morty, 2, color, 2)
+
 
 
     cv2.imshow("Image", img)
