@@ -2,30 +2,37 @@ import cv2
 import numpy as np
 import os
 
-# Playing video from file:
-cap = cv2.VideoCapture('rick_video.mp4')
 
-try:
-    if not os.path.exists('data'):
-        os.makedirs('data')
-except OSError:
-    print ('Error: Creating directory of data')
+def video_to_frames():
+    # Playing video from file:
+    cap = cv2.VideoCapture(r"C:\Users\Yuval Kashi\Downloads\rick_video.mp4")
 
-currentFrame = 0
-while(True):
-    # Capture frame-by-frame
+    try:
+        if not os.path.exists('data'):
+            os.makedirs('data')
+    except OSError:
+        print ('Error: Creating directory of data')
 
-    ret, frame = cap.read()
+    currentFrame = 0
+    i=300
+    while(i>0):
+        # Capture frame-by-frame
 
-    if currentFrame%100 == 0:
-        # Saves image of the current frame in jpg file
-        name = './data/frame' + str(currentFrame) + '.jpg'
-        print('Creating...' + name)
-        cv2.imwrite(name, frame)
+        ret, frame = cap.read()
 
-    # To stop duplicate images
-    currentFrame += 1
+        #PRINTS 1 FRAME EVERY 100 FRAMES
+        if currentFrame%100 == 0:
+            # Saves image of the current frame in jpg file
+            name = './data/frame' + str(currentFrame) + '.jpeg'
+            print('Creating...' + name)
+            cv2.imwrite(name, frame)
 
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+        # To stop duplicate images
+        currentFrame += 1
+        i = i - 1
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+    return os.getcwd()+"\data"
+
+# print(video_to_frames())
