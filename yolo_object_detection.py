@@ -21,6 +21,7 @@ def create_dir(dirname):
 # Load Yolo
 # net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
 net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_yolov3_training_final.weights", "yolov3_testing.cfg")
+# net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_stand_yolov3_training_last.weights", "yolov3_testing.cfg")
 net_morty = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
 
 # Name custom object
@@ -31,7 +32,7 @@ classes_morty = ["Morty"]
 # images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
 
 # Images path from video
-path_video_frames = VideoToFrames.video_to_frames() + "\*.jpeg"
+path_video_frames = VideoToFrames.video_to_frames(2) + "\*.jpeg"
 print(path_video_frames)
 images_path = glob.glob(path_video_frames)
 
