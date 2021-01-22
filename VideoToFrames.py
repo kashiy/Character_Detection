@@ -12,13 +12,11 @@ def video_to_frames():
         if not os.path.exists(filename):
             os.makedirs(filename)
         else:
-            files = glob.glob(os.getcwd()+"\\"+filename+"\\*")
+            files = glob.glob(os.getcwd() + "\\" + filename + "\\*")
             for f in files:
                 os.remove(f)
     except OSError:
-        print ('Error: Creating directory of '+ filename)
-
-
+        print('Error: Creating directory of ' + filename)
 
     currentFrame = 0
     i=100

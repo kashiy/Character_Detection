@@ -3,6 +3,20 @@ import numpy as np
 import glob
 import random
 import VideoToFrames
+import os
+
+def create_dir(dirname):
+    # dirname = 'detected_objects'
+    try:
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        else:
+            files = glob.glob(os.getcwd() + "\\" + dirname + "\\*")
+            for f in files:
+                os.remove(f)
+    except OSError:
+        print('Error: Creating directory of ' + dirname)
+
 
 # Load Yolo
 # net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
@@ -32,6 +46,20 @@ colors_morty = np.random.uniform(0, 255, size=(len(classes_morty), 3))
 
 # Insert here the path of your images
 random.shuffle(images_path)
+
+#directory for output
+output_dirname = 'detected_objects'
+create_dir(output_dirname)
+j = 0
+m = 0
+def crop(img, j, output_dirname, character_name):
+    crop_image = img[y:y + h, x:x + w]
+    # cv2.imshow("Cropped", crop_image)
+    cv2.imwrite(os.getcwd() + "\\" + output_dirname + "\\" + character_name + str(j) + ".jpeg", crop_image)
+    print("photo" + str(j))
+
+
+
 # loop through all the images
 for img_path in images_path:
     # Loading image
@@ -78,6 +106,8 @@ for img_path in images_path:
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     print(indexes)
     font = cv2.FONT_HERSHEY_PLAIN
+
+
     for i in range(len(boxes)):
         if i in indexes:
             x, y, w, h = boxes[i]
@@ -85,6 +115,11 @@ for img_path in images_path:
             color = colors[class_ids[i]]
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
+
+            #cut the detection image, store in directory
+            j = j + 1
+            crop(img,j,output_dirname,"rick")
+
 
 
     #morty
@@ -126,6 +161,9 @@ for img_path in images_path:
             cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
             cv2.putText(img, label, (x, y + 30), font_morty, 2, color, 2)
 
+            # cut the detection image, store in directory
+            m = m + 1
+            crop(img, m, output_dirname, "morty")
 
 
     cv2.imshow("Image", img)
