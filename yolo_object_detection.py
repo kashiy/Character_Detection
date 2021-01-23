@@ -4,6 +4,7 @@ import glob
 import random
 import VideoToFrames
 import os
+import DetectLegs
 
 def create_dir(dirname):
     # dirname = 'detected_objects'
@@ -171,3 +172,8 @@ for img_path in images_path:
     key = cv2.waitKey(0)
 
 cv2.destroyAllWindows()
+
+# Detecting position if stands or sits
+dirname = output_dirname
+weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
+DetectLegs.detect_stand_sit(dirname, weights_model_legs_path)
