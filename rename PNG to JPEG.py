@@ -1,7 +1,7 @@
 import os
 import glob
 
-for img in glob.glob(r"C:\Users\Yuval Kashi\Downloads\morty_sits_jpeg_NO_LABEL\*.PNG"):
+for img in glob.glob(r"C:\Users\Yuval Kashi\Downloads\morty_legs\*.PNG"):
     print(img)
     # fileName_absolute = os.path.basename(img)  ## Now get the file name with os.path.basename
     # print(fileName_absolute)

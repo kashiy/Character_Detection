@@ -5,15 +5,20 @@ import random
 import os
 
 
-def detect_stand_sit(dirname, weights_model_legs_path):
+def detect_stand_sit(dirname, weights_model_legs_path, str_character):
     # Load Yolo
     net = cv2.dnn.readNet(weights_model_legs_path, "yolov3_testing.cfg")
 
     # Name custom object
     classes = ["Stands"]
 
+
+
     # Images path
-    path = os.getcwd() + "\\" + dirname + "\\*"
+    # images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
+
+    # Images path
+    path = os.getcwd() + "\\" + dirname + "\\" + str_character + "*"
     images_path = glob.glob(path)
 
     layer_names = net.getLayerNames()

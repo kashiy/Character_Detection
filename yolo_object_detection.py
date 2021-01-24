@@ -175,5 +175,11 @@ cv2.destroyAllWindows()
 
 # Detecting position if stands or sits
 dirname = output_dirname
-weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
-DetectLegs.detect_stand_sit(dirname, weights_model_legs_path)
+weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\rick_legs_yolov3_training_final.weights"
+str_character = "rick"
+DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
+
+# b = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
+weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\rick_legs_yolov3_training_final.weights"
+str_character = "morty"
+DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
