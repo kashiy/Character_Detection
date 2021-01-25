@@ -19,167 +19,185 @@ def create_dir(dirname):
         print('Error: Creating directory of ' + dirname)
 
 
-# Load Yolo
-# net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
-net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_yolov3_training_final.weights", "yolov3_testing.cfg")
-# net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_stand_yolov3_training_last.weights", "yolov3_testing.cfg")
-net_morty = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
-
-# Name custom object
-classes = ["Rick"]
-classes_morty = ["Morty"]
-
-# Images path
-# images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
-
-# Images path from video
-path_video_frames = VideoToFrames.video_to_frames(10) + "\*.jpeg"
-print(path_video_frames)
-images_path = glob.glob(path_video_frames)
 
 
-layer_names = net.getLayerNames()
-output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-colors = np.random.uniform(0, 255, size=(len(classes), 3))
+def character_detection(video_path, num_frames, rick_model, morty_model,rick_legs_model,morty_legs_model):
+    # Load Yolo
+    # net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights", "yolov3_testing.cfg")
+    net = cv2.dnn.readNet(rick_model, "yolov3_testing.cfg")
+    # net = cv2.dnn.readNet(r"C:\Users\Yuval Kashi\Downloads\rick_stand_yolov3_training_last.weights", "yolov3_testing.cfg")
+    net_morty = cv2.dnn.readNet(morty_model, "yolov3_testing.cfg")
 
-layer_names_morty = net_morty.getLayerNames()
-output_layers_morty = [layer_names[i[0] - 1] for i in net_morty.getUnconnectedOutLayers()]
-colors_morty = np.random.uniform(0, 255, size=(len(classes_morty), 3))
+    # Name custom object
+    classes = ["Rick"]
+    classes_morty = ["Morty"]
 
-# Insert here the path of your images
-random.shuffle(images_path)
+    # Images path
+    # images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
 
-#directory for output
-output_dirname = 'detected_objects'
-create_dir(output_dirname)
-j = 0
-m = 0
-def crop(img, j, output_dirname, character_name):
-    crop_image = img[y:y + h, x:x + w]
-    # cv2.imshow("Cropped", crop_image)
-    cv2.imwrite(os.getcwd() + "\\" + output_dirname + "\\" + character_name + str(j) + ".jpeg", crop_image)
-    print("photo" + str(j))
+    # Images path from video
+    path_video_frames = VideoToFrames.video_to_frames(num_frames, video_path) + "\*.jpeg"
+    print(path_video_frames)
+    images_path = glob.glob(path_video_frames)
 
 
+    layer_names = net.getLayerNames()
+    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-# loop through all the images
-for img_path in images_path:
-    # Loading image
-    img = cv2.imread(img_path)
-    img = cv2.resize(img, None, fx=0.4, fy=0.4)
-    height, width, channels = img.shape
+    layer_names_morty = net_morty.getLayerNames()
+    output_layers_morty = [layer_names[i[0] - 1] for i in net_morty.getUnconnectedOutLayers()]
+    colors_morty = np.random.uniform(0, 255, size=(len(classes_morty), 3))
 
-    # Detecting objects
-    blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+    # Insert here the path of your images
+    random.shuffle(images_path)
 
-    net.setInput(blob)
-    outs = net.forward(output_layers)
-
-    net_morty.setInput(blob)
-    outs_morty = net_morty.forward(output_layers_morty)
-
-    # Showing informations on the screen
-    class_ids = []
-    confidences = []
-    boxes = []
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.3:
-                # Object detected
-                print(class_id)
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
-
-                # Rectangle coordinates
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-
-                boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
+    #directory for output
+    output_dirname = 'detected_objects'
+    create_dir(output_dirname)
+    j = 0
+    m = 0
+    def crop(img, j, output_dirname, character_name):
+        crop_image = img[y:y + h, x:x + w]
+        # cv2.imshow("Cropped", crop_image)
+        cv2.imwrite(os.getcwd() + "\\" + output_dirname + "\\" + character_name + str(j) + ".jpeg", crop_image)
+        print("photo" + str(j))
 
 
 
-    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-    print(indexes)
-    font = cv2.FONT_HERSHEY_PLAIN
+    # loop through all the images
+    for img_path in images_path:
+        # Loading image
+        img = cv2.imread(img_path)
+        img = cv2.resize(img, None, fx=0.4, fy=0.4)
+        height, width, channels = img.shape
 
+        # Detecting objects
+        blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
 
-    for i in range(len(boxes)):
-        if i in indexes:
-            x, y, w, h = boxes[i]
-            label = str(classes[class_ids[i]])
-            color = colors[class_ids[i]]
-            cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
+        net.setInput(blob)
+        outs = net.forward(output_layers)
 
-            #cut the detection image, store in directory
-            j = j + 1
-            crop(img,j,output_dirname,"rick")
+        net_morty.setInput(blob)
+        outs_morty = net_morty.forward(output_layers_morty)
 
+        # Showing informations on the screen
+        class_ids = []
+        confidences = []
+        boxes = []
+        for out in outs:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > 0.3:
+                    # Object detected
+                    print(class_id)
+                    center_x = int(detection[0] * width)
+                    center_y = int(detection[1] * height)
+                    w = int(detection[2] * width)
+                    h = int(detection[3] * height)
 
+                    # Rectangle coordinates
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
 
-    #morty
-    # Showing informations on the screen
-    class_ids_morty = []
-    confidences_morty = []
-    boxes_morty = []
-    for out_morty in outs_morty:
-        for detection in out_morty:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.3:
-                # Object detected
-                print(class_id)
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
-
-                # Rectangle coordinates
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-
-                boxes_morty.append([x, y, w, h])
-                confidences_morty.append(float(confidence))
-                class_ids_morty.append(class_id)
+                    boxes.append([x, y, w, h])
+                    confidences.append(float(confidence))
+                    class_ids.append(class_id)
 
 
 
-    indexes_morty = cv2.dnn.NMSBoxes(boxes_morty, confidences_morty, 0.5, 0.4)
-    print(indexes_morty)
-    font_morty = cv2.FONT_HERSHEY_PLAIN
-    for i in range(len(boxes_morty)):
-        if i in indexes_morty:
-            x, y, w, h = boxes_morty[i]
-            label = str(classes_morty[class_ids_morty[i]])
-            color = colors_morty[class_ids_morty[i]]
-            cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(img, label, (x, y + 30), font_morty, 2, color, 2)
-
-            # cut the detection image, store in directory
-            m = m + 1
-            crop(img, m, output_dirname, "morty")
+        indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+        print(indexes)
+        font = cv2.FONT_HERSHEY_PLAIN
 
 
-    cv2.imshow("Image", img)
-    key = cv2.waitKey(0)
+        for i in range(len(boxes)):
+            if i in indexes:
+                x, y, w, h = boxes[i]
+                label = str(classes[class_ids[i]])
+                color = colors[class_ids[i]]
+                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                cv2.putText(img, label, (x, y + 30), font, 2, color, 2)
 
-cv2.destroyAllWindows()
+                #cut the detection image, store in directory
+                j = j + 1
+                crop(img,j,output_dirname,"rick")
 
-# Detecting position if stands or sits
-dirname = output_dirname
-weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\rick_legs_yolov3_training_final.weights"
-str_character = "rick"
-DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
 
-# b = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
-weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\morty_legs_yolov3_training_final.weights"
-str_character = "morty"
-DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
+
+        #morty
+        # Showing informations on the screen
+        class_ids_morty = []
+        confidences_morty = []
+        boxes_morty = []
+        for out_morty in outs_morty:
+            for detection in out_morty:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > 0.3:
+                    # Object detected
+                    print(class_id)
+                    center_x = int(detection[0] * width)
+                    center_y = int(detection[1] * height)
+                    w = int(detection[2] * width)
+                    h = int(detection[3] * height)
+
+                    # Rectangle coordinates
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
+
+                    boxes_morty.append([x, y, w, h])
+                    confidences_morty.append(float(confidence))
+                    class_ids_morty.append(class_id)
+
+
+
+        indexes_morty = cv2.dnn.NMSBoxes(boxes_morty, confidences_morty, 0.5, 0.4)
+        print(indexes_morty)
+        font_morty = cv2.FONT_HERSHEY_PLAIN
+        for i in range(len(boxes_morty)):
+            if i in indexes_morty:
+                x, y, w, h = boxes_morty[i]
+                label = str(classes_morty[class_ids_morty[i]])
+                color = colors_morty[class_ids_morty[i]]
+                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                cv2.putText(img, label, (x, y + 30), font_morty, 2, color, 2)
+
+                # cut the detection image, store in directory
+                m = m + 1
+                crop(img, m, output_dirname, "morty")
+
+
+        cv2.imshow("Image", img)
+        key = cv2.waitKey(0)
+
+    cv2.destroyAllWindows()
+
+    # Detecting position if stands or sits
+    dirname = output_dirname
+    weights_model_legs_path = rick_legs_model
+
+    str_character = "rick"
+    DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
+
+    # b = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
+    weights_model_legs_path = morty_legs_model
+    str_character = "morty"
+    DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
+
+
+
+
+#run:
+# video_path= r"C:\Users\Yuval Kashi\Downloads\rick_video.mp4"
+video_path= r"video.mp4"
+num_frames = int(input("Enter number of frames:"))
+rick_model = r"C:\Users\Yuval Kashi\Downloads\rick_yolov3_training_final.weights"
+morty_model = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
+rick_legs_model = r"C:\Users\Yuval Kashi\Downloads\rick_legs_yolov3_training_final.weights"
+morty_legs_model =  r"C:\Users\Yuval Kashi\Downloads\morty_legs_yolov3_training_final.weights"
+
+character_detection(video_path,num_frames, rick_model, morty_model,rick_legs_model,morty_legs_model)

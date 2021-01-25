@@ -3,9 +3,9 @@ import numpy as np
 import os
 import glob
 
-def video_to_frames(num_of_frames):
+def video_to_frames(num_of_frames, video_path):
     # Playing video from file:
-    cap = cv2.VideoCapture(r"C:\Users\Yuval Kashi\Downloads\rick_video.mp4")
+    cap = cv2.VideoCapture(video_path)
 
     filename = 'data_video_to_frames'
     try:
@@ -19,14 +19,14 @@ def video_to_frames(num_of_frames):
         print('Error: Creating directory of ' + filename)
 
     currentFrame = 0
-    i=400*num_of_frames
+    i=100*num_of_frames
     while(i>0):
         # Capture frame-by-frame
 
         ret, frame = cap.read()
 
         #PRINTS 1 FRAME EVERY 100 FRAMES
-        if currentFrame%400 == 0:
+        if currentFrame%100 == 0:
             # Saves image of the current frame in jpg file
             name = './'+filename+'/frame' + str(currentFrame) + '.jpeg'
             print('Creating...' + name)
