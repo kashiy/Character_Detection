@@ -33,7 +33,7 @@ classes_morty = ["Morty"]
 # images_path = glob.glob(r"C:\Users\Yuval Kashi\Downloads\rick_standing_jpeg\*.jpeg")
 
 # Images path from video
-path_video_frames = VideoToFrames.video_to_frames(2) + "\*.jpeg"
+path_video_frames = VideoToFrames.video_to_frames(10) + "\*.jpeg"
 print(path_video_frames)
 images_path = glob.glob(path_video_frames)
 
@@ -180,6 +180,6 @@ str_character = "rick"
 DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)
 
 # b = r"C:\Users\Yuval Kashi\Downloads\morty_yolov3_training_final.weights"
-weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\rick_legs_yolov3_training_final.weights"
+weights_model_legs_path = r"C:\Users\Yuval Kashi\Downloads\morty_legs_yolov3_training_final.weights"
 str_character = "morty"
 DetectLegs.detect_stand_sit(dirname, weights_model_legs_path, str_character)

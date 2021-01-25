@@ -21,6 +21,7 @@ def detect_stand_sit(dirname, weights_model_legs_path, str_character):
     path = os.getcwd() + "\\" + dirname + "\\" + str_character + "*"
     images_path = glob.glob(path)
 
+
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
@@ -79,6 +80,9 @@ def detect_stand_sit(dirname, weights_model_legs_path, str_character):
         print(indexes)
         font = cv2.FONT_HERSHEY_PLAIN
 
+
+        # print(img_path)
+
         sit = True
         for i in range(len(boxes)):
             if i in indexes:
@@ -86,8 +90,10 @@ def detect_stand_sit(dirname, weights_model_legs_path, str_character):
                 x, y, w, h = boxes[i]
                 label = str(classes[class_ids[i]])
                 color = colors[class_ids[i]]
-                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
-                cv2.putText(img, label, (0, h -30 ), font, 2, color, 2)
+                # cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                cv2.putText(img, label, (0, h + y ), font, 2, color, 2)
+
+
 
         for i in range(len(sit_boxes)):
             if sit:
@@ -96,6 +102,10 @@ def detect_stand_sit(dirname, weights_model_legs_path, str_character):
                 label="Sits"
                 color = colors[0]
                 cv2.putText(img, label, (0 , height), font, 2, color, 2)
+                #cv2.imwrite(img_path, img)
+                # no_jpeg = img_path[:-5]
+                # new_filename = no_jpeg + label + ".jpeg"
+                # cv2.imwrite(new_filename, img)
 
         cv2.imshow("Image", img)
         key = cv2.waitKey(0)
