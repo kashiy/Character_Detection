@@ -150,7 +150,7 @@ For example, in this image there is a rare legs position that was not trained on
        
 
 
-Summary
+# Summary
 The results are very satisfying, and we have achieved our goal. 
 Our training models performed effectively, although relatively a small dataset (600 images for each model).
 
